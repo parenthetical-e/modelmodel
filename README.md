@@ -10,7 +10,7 @@ I've written the analysis tool I have always wanted.
 
 Specifically:
 
-* Designed as a programmer's analysis package first.  I wanted a clean but powerful and pythonic way to do a fMRI analysis. So that is what I tried to write.
+* To seamlessly intermix real and simulated BOLD data, allowing for detailed analysis and assumption testing.
 * Designed to make specifying a model-based design trivial; It's the only simulation environment focused on model-based designs
 * If you need to integrate computational model parameter fits, it can do that too.
 * Has builtin access to over 500 anatomical ROIs from 8 separate atlases.
@@ -18,6 +18,7 @@ Specifically:
 * Model-comparison is the default approach, with AIC the favored statistic.  But BIC, F-values, and other others are supported. 
 * It's very easy to swap in sophisticated regression techniques in place of OLS. Any regression method from statsmodels will do.
 * It's the only fMRI simulation environment for the python programming language, as least as far as I am aware (if this is wrong, please let me know). *Note*: There are very nice systems for R (neuRosim) and MATLAB (simTB  - which looks quite fantastic these days).
+* Designed as a programmer's analysis package first. I wanted a clean but powerful and pythonic way to do a fMRI analysis. So that is what I tried to write.
 
 That said, I really hope it is useful to you.
 
