@@ -4,8 +4,7 @@ SHELL := /bin/bash
 data/rw10.hdf5: models.ini
 	python rw.py data/rw10.hdf5 \
 		-N 10 \
-		--n_cond 1 \
-		--n_trials_cond 60 \
+		--n_trials 60 \
 		--behave learn \
 		--models models.ini 
 
@@ -16,15 +15,13 @@ rwBoth: data/rw500_l.hdf5 data/rw500_r.hdf5
 data/rw500_l.hdf5: moremodels.ini
 	python rw.py data/rw500_l.hdf5 \
 		-N 500 \
-		--n_cond 1 \
-		--n_trials_cond 60 \
+		--n_trials 60 \
 		--behave learn \
 		--models moremodels.ini 
 
 data/rw500_r.hdf5: moremodels.ini
 	python rw.py data/rw500_r.hdf5 \
 		-N 500 \
-		--n_cond 1 \
-		--n_trials_cond 60 \
+		--n_trials 60 \
 		--behave random \
 		--models moremodels.ini 

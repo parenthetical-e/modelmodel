@@ -34,13 +34,13 @@ parser.add_argument(
         default=1000, type=int,
         help="Number of iterations"
         )         
+# parser.add_argument(
+#         "--n_cond",
+#         default=1, type=int,
+#         help="Number of cond"
+#         )
 parser.add_argument(
-        "--n_cond",
-        default=1, type=int,
-        help="Number of cond"
-        )
-parser.add_argument(
-        "--n_trials_cond",
+        "--n_trials",
         default=60, type=int,
         help="Number of trials / cond"
         )
@@ -61,6 +61,8 @@ parser.add_argument(
 args = parser.parse_args()
 prng = np.random.RandomState(args.seed)
 
+n_cond = 1 
+
 # Get and parse the model.ini file
 model_configs = read_models(args.models)
 
@@ -73,12 +75,12 @@ for n in range(args.N):
     # Create data
     if args.behave == 'learn':
         trials, acc, p, prng = behave.learn(
-                args.n_cond, args.n_trials_cond, 
+                n_cond, args.n_trials, 
                 loc=prng.normal(3, .3), prng=prng
                 )
     elif args.behave == 'random':
         trials, acc, p, prng = behave.random(
-                args.n_cond, args.n_trials_cond, prng=prng
+                n_cond, args.n_trials, prng=prng
                 )
     else:
         raise ValueError('--behave not understood')
