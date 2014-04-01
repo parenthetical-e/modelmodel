@@ -119,7 +119,7 @@ for n in range(args.N):
                 savedf = df 
 
             n_results.update(merge_results(
-                    model_name + '_' + bold_name,
+                    'bold:'+bold_name + '_' + 'model:'+model_name,
                     model, smo, df=savedf, stato=stato, other=rlpars
                     ))
                     
