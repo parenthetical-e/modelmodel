@@ -35,8 +35,8 @@ paths = args.paths
 dims = args.dims
 
 for dim in dims:
-    if dim <= 0: raise ValueError("dim can't be 0 or negative")
-    if dim > 2: raise ValueError("dim can't be greater than 2")
+    if dim < 0: raise ValueError("dim can't be negative")
+    if dim > 1: raise ValueError("dim can't be greater than 1")
     
 # Build up the tree to traverse
 # get the data and write it
@@ -52,8 +52,8 @@ for path, name, dim in zip(paths, names, dims):
                     for leave in tree 
                     for key in hdf[leave].keys()
                     ]
-    tree = [leave + parts[-1] for leave in tree] ## Add the stat to extract
-
+    tree = [leave + parts[-1] for leave in tree]   ## Add the stat to extract
+    
     extracted = []
     for leave in tree:
         extracted.append(hdf[leave].value)
@@ -63,7 +63,7 @@ for path, name, dim in zip(paths, names, dims):
         parts = leave.split('/')
         undertree.append('_'.join(parts))
     
-    if dim == 1:
+    if dim == 0:
         data = np.squeeze(np.asarray(extracted))
         df = pd.DataFrame(data={parts[-1] : data})
         df['path'] = undertree
@@ -71,4 +71,5 @@ for path, name, dim in zip(paths, names, dims):
         data = np.vstack(extracted).transpose()
         ncol = data.shape[1]
         df = pd.DataFrame(data=data, cols=undertree)
-    df.to_csv(name, index=False, float_format='%.6f')
+    
+    df.to_csv(name, index=False, float_format='%.8f')
