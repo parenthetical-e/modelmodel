@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+BINPATH=~/Code/modelmodel/bin
 
 # -----------------
 # A quick fast test
@@ -56,7 +57,7 @@ data/rw500_r.hdf5: moremodels.ini
 # Extract data
 # ------------
 data/rw_*.csv:
-	python extract.py \
+	python $(BINPATH)/extract.py \
 		--hdf data/rw10.hdf5 \
 		--names data/rw_fvalue.csv data/rw_pvalue.csv \
 		--paths /*/*/tests/fvalue /*/*/tests/pvalue \
