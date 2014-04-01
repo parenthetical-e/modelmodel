@@ -6,7 +6,7 @@ import rl
 from modelmodel.misc import process_prng
 
 
-def rescorla_wagner(trials, acc, p, prng=None):
+def rescorla_wagner(trials, acc, p, alpha=None, prng=None):
     """Create a RW learning dataset
     
     Parameters
@@ -17,15 +17,21 @@ def rescorla_wagner(trials, acc, p, prng=None):
          Accuracy data
     p : list([float])
         p(correct)
+    alpha : float, None
+        The learning rate (None fits by ML)
     """
     
     prng = process_prng(prng)
     l = trials.shape[0]
     
-    # fit RW models
-    best_rl_pars, best_logL = rl.fit.ml_delta(acc, trials, 0.05)
-    v_dict, rpe_dict = rl.reinforce.b_delta(acc, trials, best_rl_pars[0])
-
+    # fit RW models?
+    if alpha is None:
+        best_rl_pars, best_logL = rl.fit.ml_delta(acc, trials, 0.05)
+        v_dict, rpe_dict = rl.reinforce.b_delta(acc, trials, best_rl_pars[0])
+    else:
+        best_rl_pars, best_logL = None, None
+        v_dict, rpe_dict = rl.reinforce.b_delta(acc, trials, alpha)
+        
     values = rl.misc.unpack(v_dict, trials) ## Reformat from dict to array
     rpes = rl.misc.unpack(rpe_dict, trials)
     
