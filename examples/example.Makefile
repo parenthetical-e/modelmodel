@@ -2,6 +2,28 @@ SHELL := /bin/bash
 BINPATH=~/Code/modelmodel/bin
 
 # -----------------
+# Save some behave data
+# -----------------
+behave50: data/behave50_l.csv data/behave50_r.csv
+	
+data/behave50_l.csv:
+	python $(BINPATH)/behave.py \
+	data/behave50_l.csv \
+	-N 50 \
+	--behave learn \
+	--n_cond 1 \
+	--n_trials 60 \
+
+data/behave50_r.csv:
+	python $(BINPATH)/behave.py \
+	data/behave50_r.csv \
+	-N 50 \
+	--behave random \
+	--n_cond 1 \
+	--n_trials 60 \
+
+
+# -----------------
 # A quick fast test
 # -----------------
 data/rw10.hdf5: models.ini
@@ -61,4 +83,4 @@ data/rw_*.csv:
 		--hdf data/rw10.hdf5 \
 		--names data/rw_fvalue.csv data/rw_pvalue.csv \
 		--paths /*/*/tests/fvalue /*/*/tests/pvalue \
-		--dims 1 1
+		--dims 0 0
