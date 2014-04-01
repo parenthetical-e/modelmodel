@@ -4,6 +4,8 @@ The focus is on model-based (i.e. parametric) designs.
 
 It is still *very much* a work in progress.
 
+The great work of [statsmodel](http://statsmodels.sourceforge.net/devel/index.html) project and especially [patsy](http://patsy.readthedocs.org/en/latest/) made this package possible and powerful.
+
 ---
 
 I've written the analysis tool I have always wanted.  
