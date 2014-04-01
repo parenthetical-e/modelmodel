@@ -9,7 +9,7 @@ behave50: data/behave50_l.csv data/behave50_r.csv
 data/behave50_l.csv:
 	python $(BINPATH)/behave.py \
 	data/behave50_l.csv \
-	-N 50 \
+	-50 \
 	--behave learn \
 	--n_cond 1 \
 	--n_trials 60 \
@@ -17,7 +17,7 @@ data/behave50_l.csv:
 data/behave50_r.csv:
 	python $(BINPATH)/behave.py \
 	data/behave50_r.csv \
-	-N 50 \
+	-50 \
 	--behave random \
 	--n_cond 1 \
 	--n_trials 60 \

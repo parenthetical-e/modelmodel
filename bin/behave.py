@@ -7,7 +7,7 @@ from modelmodel.behave import behave
 
 
 parser = argparse.ArgumentParser(
-        description="Simulate a Rescorla Wagner experiment",
+        description="Create a table of simulated behave data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
 parser.add_argument(
@@ -15,19 +15,19 @@ parser.add_argument(
         help="Name of table"
         )
 parser.add_argument(
-        "-N", type=int,
+        "N", type=int,
         help="Number of samples"
         )
 parser.add_argument(
-        "--behave", type=str,
+        "--behave", type=str, default='learn',
         help="Behavior learning mode"
         )
 parser.add_argument(
-        "--n_cond", type=int,
+        "--n_cond", type=int, default=1,
         help="N cond"
         )
 parser.add_argument(
-        "--n_trials", type=int,
+        "--n_trials", type=int, default=60,
         help="N trials/cond"
         )
 parser.add_argument(
