@@ -34,11 +34,6 @@ parser.add_argument(
         default=1000, type=int,
         help="Number of iterations"
         )         
-# parser.add_argument(
-#         "--n_cond",
-#         default=1, type=int,
-#         help="Number of cond"
-#         )
 parser.add_argument(
         "--n_trials",
         default=60, type=int,
@@ -54,13 +49,16 @@ parser.add_argument(
         help="The models file (.ini)"
         )
 parser.add_argument(
+        "--save_behave", type=bool, default=False,
+        help="Save the behave data?"
+        )
+parser.add_argument(
         "--seed",
         default=42, type=int,
         help="RandomState seed"
         )
 args = parser.parse_args()
 prng = np.random.RandomState(args.seed)
-
 n_cond = 1 
 
 # Get and parse the model.ini file
@@ -72,6 +70,8 @@ asbold = ['box', 'acc', 'p', 'value', 'rpe', 'rand']
 # Regress for each BOLD, and model for N interations 
 results = {}
 for n in range(args.N):
+    print("Iteration {0}".format(n))
+    
     # Create data
     if args.behave == 'learn':
         trials, acc, p, prng = behave.learn(
@@ -84,12 +84,12 @@ for n in range(args.N):
                 )
     else:
         raise ValueError('--behave not understood')
-    
-    # Convolve with HRF
     df, rlpars = reinforce.rescorla_wagner(trials, acc, p, prng=prng)
+
+    # Convolve with HRF
     df = convolve_hrf(df, dg(), asbold)
     
-    # Create orth regressors
+    # Orth select regressors
     to_orth = [['box', bold] for bold in asbold if bold != 'box']
     for orth in to_orth:
         df[orth[1]+'_o'] = orthogonalize(df, orth)[orth[1]]
@@ -99,8 +99,8 @@ for n in range(args.N):
     for model_name, model, test, hypoth in zip(*model_configs):
         for bold_name in asbold:
             l = df.shape[0]
-
             noi, prng = white(l, prng=prng)
+
             df['bold'] = create_bold([df[bold_name].values], None, noi)
 
             smo = smf.ols(model, data=df).fit()
@@ -114,10 +114,15 @@ for n in range(args.N):
             elif test is not None:
                 raise ValueError("Unknown test")
             
+            savedf = None
+            if args.save_behave: 
+                savedf = df 
+
             n_results.update(merge_results(
                     model_name + '_' + bold_name,
-                    model, smo, df=None, stato=stato, other=rlpars
+                    model, smo, df=savedf, stato=stato, other=rlpars
                     ))
+                    
     results.update({str(n) : n_results})
 
 write_hdf(results, str(args.name))
