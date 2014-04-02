@@ -85,6 +85,9 @@ def add_movement(dm, movement):
     
     if dm.shape[0] != movement.shape[0]:
         raise ValueError("Wrong n_samples in dm or movement")
-        
-    return np.vstack((dm, dm_movement))
+    
+    try:
+        return pd.concat([dm, movement], axis=1)
+    except AttributeError:
+        return np.hstack((dm, dm_movement))
 
