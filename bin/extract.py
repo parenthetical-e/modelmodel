@@ -68,8 +68,13 @@ for path, name, dim in zip(paths, names, dims):
         df = pd.DataFrame(data={parts[-1] : data})
         df['path'] = undertree
     else:
-        data = np.vstack(extracted).transpose()
-        ncol = data.shape[1]
-        df = pd.DataFrame(data=data, cols=undertree)
+        maxl = np.max([len(ext) for ext in extracted])
+        data = np.zeros([maxl, len(extracted)])
+        for j, ext in enumerate(extracted):
+            data[:len(ext),j] = ext
+        df = pd.DataFrame(data=data.transpose(), 
+                columns=[str(parts[-1])+str(i) for i in range(maxl)]
+                )
+        df['path'] = undertree
     
     df.to_csv(name, index=False, float_format='%.8f')
