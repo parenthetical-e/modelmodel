@@ -7,14 +7,18 @@ from statsmodels.api import GLS
 
 
 def convolve_hrf(dm, hrf, cols=None):
-    """ Convolve hrf onto design matrix columns."""
+    """Convolve hrf onto design matrix columns."""
     
-    # Assume 2d, fall back to 1d.
+    if cols is None:
+        cols = range(dm.shape[1])
+    
+    # Select data
     try:
         dm_c = dm[:,cols]  ## np
     except TypeError:
         dm_c = dm[cols]    ## pd
     
+    # Assume 2d, fall back to 1d.
     try:
         for col in cols:
             try:
