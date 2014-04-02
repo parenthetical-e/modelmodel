@@ -4,6 +4,8 @@ import argparse
 import pandas as pd
 import numpy as np
 from modelmodel.behave import behave
+from modelmodel.hrf import double_gamma as dg
+from modelmodel.dm import convolve_hrf
 
 
 parser = argparse.ArgumentParser(
@@ -29,6 +31,10 @@ parser.add_argument(
 parser.add_argument(
         "--n_trials", type=int, default=60,
         help="N trials/cond"
+        )
+parser.add_argument(
+        "--convolve", type=bool, default=False,
+        help="Convolve each col with the (canonical) double gamma HRF"
         )
 parser.add_argument(
         "--seed",
@@ -69,7 +75,19 @@ index = np.concatenate(index)
 trials = np.concatenate(trials)
 accs = np.concatenate(accs)
 ps = np.concatenate(ps)
-data = np.vstack([count, index, trials, accs, ps]).transpose()
 
-df = pd.DataFrame(data=data, columns=('count', 'index', 'trials', 'acc', 'p'))
+box = np.zeros_like(trials)
+box[trials > 0] = 1
+
+data = np.vstack([count, index, trials, box, accs, ps]).transpose()
+df = pd.DataFrame(data=data, columns=(
+        'count', 'index', 'trials', 'box', 'acc', 'p'
+        ))
+
+if args.convolve:
+    tocon = ['box', 'acc', 'p']
+    condf = convolve_hrf(df, dg(), tocon)
+    for con in tocon:
+        df[con] = condf[con]
+
 df.to_csv(args.name, index=False, float_format='%.8f')

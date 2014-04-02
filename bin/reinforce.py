@@ -5,6 +5,9 @@ import pandas as pd
 import numpy as np
 from modelmodel.behave import behave
 from modelmodel.behave import reinforce
+from modelmodel.hrf import double_gamma as dg
+from modelmodel.dm import convolve_hrf
+
 
 parser = argparse.ArgumentParser(
         description="Create a table of simulated RL (Rescorla Wagner) data",
@@ -34,6 +37,10 @@ parser.add_argument(
         "--alpha",
         type=float, nargs="+", default=None,
         help="Set alpha values"
+        )
+parser.add_argument(
+        "--convolve", type=bool, default=False,
+        help="Convolve each col with the (canonical) double gamma HRF"
         )
 parser.add_argument(
         "--seed",
@@ -67,6 +74,12 @@ for n in range(args.N):
     df['index'] = np.arange(l, dtype=np.int)
     
     dfs.append(df)
-    
 df = pd.concat(dfs, axis=0)
+
+if args.convolve:
+    tocon = ['box', 'acc', 'p', 'rpe', 'value']
+    condf = convolve_hrf(df, dg(), tocon)
+    for con in tocon:
+        df[con] = condf[con]
+    
 df.to_csv(args.name, index=False, float_format='%.8f')
