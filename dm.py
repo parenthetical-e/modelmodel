@@ -7,7 +7,13 @@ from statsmodels.api import GLS
 
 
 def convolve_hrf(dm, hrf, cols=None):
-    """Convolve hrf onto design matrix columns."""
+    """Convolve hrf onto design matrix columns.
+    
+    Note
+    ----
+    If cols is not None, only the specified cols
+    are returned.
+    """
     
     if cols is None:
         cols = range(dm.shape[1])
