@@ -16,7 +16,10 @@ def convolve_hrf(dm, hrf, cols=None):
     """
     
     if cols is None:
-        cols = range(dm.shape[1])
+        try:
+            cols = range(dm.shape[1]) # 2d?
+        except IndexError:
+            cols = range(dm.shape[0]) ## Fall back to 1d
     
     # Select data
     try:
