@@ -1,4 +1,4 @@
-"""Extract data from rw.py experiments to a .csv file"""
+"""Extract data from experiments to a .csv file"""
 import os
 import argparse
 import h5py
@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 parser = argparse.ArgumentParser(
-        description="Simulate a Rescorla Wagner experiment",
+        description="Extract data from model experimental hdf files to csv tables",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
 parser.add_argument(
@@ -24,6 +24,10 @@ parser.add_argument(
 parser.add_argument(
         "--dims", type=int, nargs='+',
         help="Dimensionality of data expected for each path"
+        )
+parser.add_argument(
+        "--pad", type=int, default=-999999,
+        help="Pad missing values with?"
         )
 args = parser.parse_args()
 
@@ -71,7 +75,10 @@ for path, name, dim in zip(paths, names, dims):
         maxl = np.max([len(ext) for ext in extracted])
         data = np.zeros([maxl, len(extracted)])
         for j, ext in enumerate(extracted):
-            data[:len(ext),j] = ext
+            diff = maxl - len(ext)
+            if diff > 0:
+                ext = np.concatenate([ext, np.repeat(args.pad, diff)])
+            data[:,j] = ext 
         df = pd.DataFrame(data=data.transpose(), 
                 columns=[str(parts[-1])+str(i) for i in range(maxl)]
                 )
