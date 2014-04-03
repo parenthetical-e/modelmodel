@@ -1,3 +1,5 @@
+import numpy as np
+
 
 def conjunction(stats, ps=None):
     """Run a conjunction test.
@@ -50,12 +52,9 @@ def conjunction(stats, ps=None):
     """
     
     # So many words for so simple a test
-    supremum_stat = np.min(stats)
-
-    supremum_p = None
-    if ps is not None:
-        supremum_p = ps[stats == supremum_stat]
+    min_s = np.min(stats)
+    min_p = ps[stats == min_s][0]
     
-    return supremum_t, supremum_p
+    return min_s, min_p
     
     

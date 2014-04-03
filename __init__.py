@@ -5,3 +5,4 @@ import norm
 import hrf
 import misc
 import io
+import stats
