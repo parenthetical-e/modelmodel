@@ -35,7 +35,7 @@ parser.add_argument(
         )
 parser.add_argument(
         "--alpha",
-        type=float, nargs="+", default=None,
+        type=float, default=None,
         help="Set alpha values"
         )
 parser.add_argument(
