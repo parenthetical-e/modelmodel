@@ -29,9 +29,9 @@ def convolve_hrf(dm, hrf, cols=None):
     
     # Assume 2d, fall back to 1d.
     try:
-        for col in cols:
+        for j, col in enumerate(cols):
             try:
-                dm_c[:,col] = np.convolve(dm[:,col], hrf)[0:dm.shape[0]] ## np
+                dm_c[:,j] = np.convolve(dm[:,col], hrf)[0:dm.shape[0]] ## np
             except TypeError:
                 dm_c[col] = np.convolve(dm[col], hrf)[0:dm.shape[0]]     ## pd
     except IndexError:
@@ -65,7 +65,7 @@ def orthogonalize(dm, cols):
         
         # Orthgonalize left to right....
         ## GLS(y
-        try: 
+        try:
             glm = GLS(dm[:,right], dm[:,left]).fit()    ## np
             orth_dm[:,right] = glm.resid
         except TypeError:
