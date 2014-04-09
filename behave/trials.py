@@ -24,7 +24,7 @@ def jitter(trials, code=0, fraction=.5, jit=(1,7), prng=None):
         
 
 def random(N, k, prng=None):
-    """Creates a randomly list of trials (int) of N trials with 
+    """Creates a randomly list of trials (int) of N cond with 
     k trials / cond.
     """
 

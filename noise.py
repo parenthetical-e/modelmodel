@@ -1,7 +1,7 @@
 """ Noise models. """
 import numpy as np
 import scipy.stats as stats
-from simfMRI.misc import process_prng
+from modelmodel.misc import process_prng
 
 
 def white(N, sigma=1, prng=None):
