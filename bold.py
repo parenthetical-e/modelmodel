@@ -15,9 +15,10 @@ def create_bold(arrays, hrf=None, noise=None):
     else:
         bold = arr.sum(axis=1)
     bold = bold.flatten()
-
+    
     if hrf is not None:
-        bold = convolve_hrf(bold, hrf)
+        bold = convolve_hrf(bold[:,np.newaxis], hrf).flatten()
+            ## Reshape to 2d for convolve_hrf then undo via flatten
     
     if noise is not None:
         bold = bold + noise

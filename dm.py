@@ -9,34 +9,39 @@ from statsmodels.api import GLS
 def convolve_hrf(dm, hrf, cols=None):
     """Convolve hrf onto design matrix columns.
     
+    dm : array-like or DataFrame (n_samples, n_conds)
+        The design matrix
+    hrf : array-like
+        The HRF to convolve the dm cols with
+    cols : list, array-like, None
+        Only convolve select cols. 
+    
     Note
     ----
     If cols is not None, only the specified cols
-    are returned.
+    are returned. The cols can be a seqeunce of ints
+    if dm if array-like or a DataFrame, or a seqeunce
+    of strs if DataFrame only.
     """
+
+    if dm.ndim != 2:
+        raise ValueError("dm must be 2d")
     
     if cols is None:
+            cols = range(dm.shape[1]) # 2d?    
+
+    dm_c = dm.copy()
+    for j, col in enumerate(cols):
         try:
-            cols = range(dm.shape[1]) # 2d?
-        except IndexError:
-            cols = range(dm.shape[0]) ## Fall back to 1d
-    
-    # Select data
-    try:
-        dm_c = dm[:,cols]  ## np
-    except TypeError:
-        dm_c = dm[cols]    ## pd
-    
-    # Assume 2d, fall back to 1d.
-    try:
-        for j, col in enumerate(cols):
+            # is pd and cols are ints?
+            dm_c.ix[col] = np.convolve(dm.ix[col], hrf)[0:dm.shape[0]]
+        except (AttributeError, KeyError):
             try:
-                dm_c[:,j] = np.convolve(dm[:,col], hrf)[0:dm.shape[0]] ## np
+                # is np?
+                dm_c[:,j] = np.convolve(dm[:,col], hrf)[0:dm.shape[0]] 
             except TypeError:
-                dm_c[col] = np.convolve(dm[col], hrf)[0:dm.shape[0]]     ## pd
-    except IndexError:
-        dm_c = np.convolve(dm[:], hrf)[0:dm.shape[0]]
-            ## cols don't matter for 1d
+                # is pd and col are strings
+                dm_c[col] = np.convolve(dm[col], hrf)[0:dm.shape[0]] 
     
     return dm_c
 
