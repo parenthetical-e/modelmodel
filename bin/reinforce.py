@@ -23,7 +23,7 @@ parser.add_argument(
         )
 parser.add_argument(
         "--behave", type=str, default='learn',
-        help="Behavior learning mode"
+        help="Behavior learning mode (learn, random)"
         )
 parser.add_argument(
         "--n_cond", type=int, default=1,
@@ -54,7 +54,7 @@ dfs = []
 for n in range(args.N):
     if args.behave == 'learn':
         trial, acc, p, prng = behave.learn(
-                args.n_cond, args.n_trials, 
+                args.n_cond, args.n_trials,
                 loc=prng.normal(3, .3), prng=prng
                 )
     elif args.behave == 'random':
@@ -63,16 +63,16 @@ for n in range(args.N):
                 )
     else:
         raise ValueError('--behave not understood')
-    
+
     df, rlpars = reinforce.rescorla_wagner(
             trial, acc, p, alpha=args.alpha, prng=prng
             )
-    del df['rand']
-    
+    # del df['rand']
+
     l = trial.shape[0]
     df['count'] = np.repeat(n, l)
     df['index'] = np.arange(l, dtype=np.int)
-    
+
     dfs.append(df)
 df = pd.concat(dfs, axis=0)
 
@@ -81,5 +81,5 @@ if args.convolve:
     condf = convolve_hrf(df, dg(), tocon)
     for con in tocon:
         df[con] = condf[con]
-    
+
 df.to_csv(args.name, index=False, float_format='%.8f')
