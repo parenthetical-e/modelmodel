@@ -54,21 +54,17 @@ for i in range(stats.shape[0]):
 
     if sdata.shape[0] != pdata.shape[0]:
         raise ValueError("Row lengths don't match ({0})".format(i))
-    
+
     stat, p = conjunction(sdata, pdata)
-      
+
     conjs.append(stat)
     p_conjs.append(p)
     paths.append(spath)
 
 df = pd.DataFrame(
-        data=np.vstack([conjs, p_conjs]).transpose(), 
+        data=np.vstack([conjs, p_conjs]).transpose(),
         columns=['value', 'p']
         )
 df['path'] = paths
 df.to_csv(args.name, index=False, float_format='%.8f')
-
-
-
-
 
